@@ -94,31 +94,34 @@ st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 def get_resume_text(filepath, file):
     file_path = os.path.join(filepath, file)
-    
-    if file.endswith('.docx'):
-        text = docx2txt.process(file_path)
-        return text
-    elif file.endswith('.doc'):
-        # Converting .doc file to .docx
-        docx_file = file_path + 'x'
-        if not os.path.exists(docx_file):
-            os.system('antiword "' + file_path + '" > "' + docx_file + '"')
-            with open(docx_file) as f:
-                text = f.read()
-            os.remove(docx_file)
-        else:
-            print('info: file with the same name does not exist with a docx extension')
-            text = ''
-        return text
-    elif file.endswith('.pdf'):
-        with open(file_path, 'rb') as f:
-            reader = PyPDF2.PdfReader(f)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text()
-        return text
-    else:
-        return ''
+
+    if os.path.isfile(file_path):
+        if file.endswith('.docx'):
+            text = docx2txt.process(file_path)
+            return text
+        elif file.endswith('.doc'):
+            # Converting .doc file to .docx
+            docx_file = file_path + 'x'
+            if not os.path.exists(docx_file):
+                os.system('antiword "' + file_path + '" > "' + docx_file + '"')
+                with open(docx_file) as f:
+                    text = f.read()
+                os.remove(docx_file)
+            else:
+                print('info: file with the same name does not exist with a docx extension')
+                text = ''
+            return text
+        elif file.endswith('.pdf'):
+            with open(file_path, 'rb') as f:
+                reader = PyPDF2.PdfReader(f)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text()
+            return text
+
+    # Handle the case if the file is not found
+    print(f'Error: File not found - {file_path}')
+    return ''
 
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
