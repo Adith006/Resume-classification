@@ -22,7 +22,7 @@ from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 from keybert import KeyBERT
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-nltk.data.append("C:/Users/Adith/AppData/Roaming/nltk_data")
+nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('vader_lexicon')
