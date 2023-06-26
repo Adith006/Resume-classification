@@ -88,7 +88,7 @@ jedi==0.18.1
 keybert==0.7.0
 docx==0.2.4
 docx2txt==0.8
-en-core-web-sm==3.6.0
+en-core-web-sm==3.5.1
 regex==2023.6.3
 
 
