@@ -350,79 +350,79 @@ if page == "Resume classification":
 
 if page == "Resume Screening":
     screening = st.sidebar.button("Screening")
-def main():
+    def main():
     
-    st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
-    job_description = st.sidebar.text_input("Enter job description to know resume Match",placeholder="Paste Job Description")
-    
-    if uploaded_files:
-        all_text = []
+        st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
+        uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
+        job_description = st.sidebar.text_input("Enter job description to know resume Match",placeholder="Paste Job Description")
         
-        for file in uploaded_files:
-            text = convert_resume_to_text(file)
-            if text:
-                all_text.append(text)
-        if screening:
-            names = []
-            skills = []
-            educations = []
-            experiences = []
-            keywords = []
-            scores = []
-            summaries = []
-            for resume_text in all_text:
-                
-                 cleaned_resume = process_resume(resume_text)
-                 cleaned_resume = remove_emoji(cleaned_resume)
-                 cleaned_resume = word_tokenize(cleaned_resume)
-                 my_stop_words = stopwords.words('english')
-                 cleaned_resume = [word for word in cleaned_resume if not word in my_stop_words]
-                 nlp = spacy.load('en_core_web_sm')
-                 cleaned_resume = nlp(' '.join(cleaned_resume))
-                 cleaned_resume = [token.lemma_ for token in cleaned_resume]
-                 cleaned_resume = ' '.join(cleaned_resume)
-                 #st.write(cleaned_resume)
-                 name = extract_name_from_resume(cleaned_resume)
-                 names.append(name)
-                 skill = extract_skills(cleaned_resume)
-                 skills.append(skill)
-                 education = parse_resume(cleaned_resume)
-                 educations.append(education)
-                 experience = expDetails(cleaned_resume)
-                 experiences.append(experience)
-                 keyword = extract_keywords(cleaned_resume)
-                 keywords.append(keyword)
-                 corpus = [cleaned_resume,job_description]
-                 score = get_resume_score(corpus)
-                 scores.append(score)
-                 summary = extract_resume_summary(cleaned_resume)
-                 summaries.append(summary)
-                 name_list = []
-                 skill_list = []
-                 education_list = []
-                 experience_list = []
-                 keyword_list = []
-                 score_list = []
-                 summary_list = []
-                
-            for i,(skill,education,experience,keyword,score,name,summary)in enumerate(zip(skills,educations,experiences,keywords,scores,names,summaries)):
-                name_list.append(name)
-                skill_list.append(skill)
-                education_list.append(education)
-                experience_list.append(experience)
-                keyword_list.append(keyword)
-                score_list.append(score)
-                summary_list.append(summary)
-            #create dataframe
-            data_scr = {'Name': name_list,'Skills':skill_list,'Education':education_list,'Experience':experience_list,'Keywords':keyword_list,'Summary':summary_list,'Resume Match (in %)':score_list}
-            df_scr = pd.DataFrame(data_scr)
-            st.table(df_scr)
+        if uploaded_files:
+            all_text = []
             
-            #adding download button
-            csv = df_scr.to_csv(index=False)
-            st.download_button(label="Download",data=csv,file_name="Resume_data.csv")
-            
+            for file in uploaded_files:
+                text = convert_resume_to_text(file)
+                if text:
+                    all_text.append(text)
+            if screening:
+                names = []
+                skills = []
+                educations = []
+                experiences = []
+                keywords = []
+                scores = []
+                summaries = []
+                for resume_text in all_text:
+                    
+                     cleaned_resume = process_resume(resume_text)
+                     cleaned_resume = remove_emoji(cleaned_resume)
+                     cleaned_resume = word_tokenize(cleaned_resume)
+                     my_stop_words = stopwords.words('english')
+                     cleaned_resume = [word for word in cleaned_resume if not word in my_stop_words]
+                     nlp = spacy.load('en_core_web_sm')
+                     cleaned_resume = nlp(' '.join(cleaned_resume))
+                     cleaned_resume = [token.lemma_ for token in cleaned_resume]
+                     cleaned_resume = ' '.join(cleaned_resume)
+                     #st.write(cleaned_resume)
+                     name = extract_name_from_resume(cleaned_resume)
+                     names.append(name)
+                     skill = extract_skills(cleaned_resume)
+                     skills.append(skill)
+                     education = parse_resume(cleaned_resume)
+                     educations.append(education)
+                     experience = expDetails(cleaned_resume)
+                     experiences.append(experience)
+                     keyword = extract_keywords(cleaned_resume)
+                     keywords.append(keyword)
+                     corpus = [cleaned_resume,job_description]
+                     score = get_resume_score(corpus)
+                     scores.append(score)
+                     summary = extract_resume_summary(cleaned_resume)
+                     summaries.append(summary)
+                     name_list = []
+                     skill_list = []
+                     education_list = []
+                     experience_list = []
+                     keyword_list = []
+                     score_list = []
+                     summary_list = []
+                    
+                for i,(skill,education,experience,keyword,score,name,summary)in enumerate(zip(skills,educations,experiences,keywords,scores,names,summaries)):
+                    name_list.append(name)
+                    skill_list.append(skill)
+                    education_list.append(education)
+                    experience_list.append(experience)
+                    keyword_list.append(keyword)
+                    score_list.append(score)
+                    summary_list.append(summary)
+                #create dataframe
+                data_scr = {'Name': name_list,'Skills':skill_list,'Education':education_list,'Experience':experience_list,'Keywords':keyword_list,'Summary':summary_list,'Resume Match (in %)':score_list}
+                df_scr = pd.DataFrame(data_scr)
+                st.table(df_scr)
+                
+                #adding download button
+                csv = df_scr.to_csv(index=False)
+                st.download_button(label="Download",data=csv,file_name="Resume_data.csv")
+                
            
             
             
