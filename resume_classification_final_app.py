@@ -331,6 +331,7 @@ if page == "Resume classification":
                 cleaned_resume = nlp(' '.join(cleaned_resume))
                 cleaned_resume = [token.lemma_ for token in cleaned_resume]
                 cleaned_resume = ' '.join(cleaned_resume)
+                st.write(cleaned_resume)
     
                 input_feat = loaded_vect.transform([cleaned_resume])
                 prediction_id = loaded_model.predict(input_feat)[0]
