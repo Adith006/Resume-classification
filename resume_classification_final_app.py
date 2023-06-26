@@ -92,36 +92,28 @@ with st.container():
 
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
-def get_resume_text(filepath, file):
-    file_path = os.path.join(filepath, file)
-
-    if os.path.isfile(file_path):
-        if file.endswith('.docx'):
-            text = docx2txt.process(file_path)
-            return text
-        elif file.endswith('.doc'):
-            # Converting .doc file to .docx
-            docx_file = file_path + 'x'
-            if not os.path.exists(docx_file):
-                os.system('antiword "' + file_path + '" > "' + docx_file + '"')
-                with open(docx_file) as f:
-                    text = f.read()
-                os.remove(docx_file)
-            else:
-                print('info: file with the same name does not exist with a docx extension')
-                text = ''
-            return text
-        elif file.endswith('.pdf'):
-            with open(file_path, 'rb') as f:
-                reader = PyPDF2.PdfReader(f)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text()
-            return text
-
-    # Handle the case if the file is not found
-    print(f'Error: File not found - {file_path}')
-    return ''
+def convert_resume_to_text(file):
+    if file.name.endswith('.docx'):
+        text = docx2txt.process(file)
+        return text
+    elif file.name.endswith('.doc'):
+        # Converting .doc file to .docx
+        docx_file = file + 'x'
+        os.system('antiword "' + file + '" > "' + docx_file + '"')
+        with open(docx_file) as f:
+            text = f.read()
+        os.remove(docx_file)
+        return text
+    elif file.name.endswith('.pdf'):
+        with open(file, 'rb') as f:
+            reader = PyPDF2.PdfReader(f)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text()
+        return text
+    else:
+        print('Error: Unsupported file format')
+        return ''
 
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
@@ -295,16 +287,13 @@ if page == "Resume classification":
     if uploaded_files:
         all_text = []
 
+        uploaded_files = st.file_uploader("Upload resumes", accept_multiple_files=True)
+    
+    if uploaded_files:
+        all_text = []
+        
         for file in uploaded_files:
-            # Create a temporary file to save the uploaded resume
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(file.read())
-                temp_filepath = temp_file.name
-    
-            # Obtain the filename from the UploadedFile object
-            filename = file.name
-    
-            text = get_resume_text(temp_filepath, filename)  # Pass the filename instead of the UploadedFile object
+            text = convert_resume_to_text(file)
             if text:
                 all_text.append(text)
     
