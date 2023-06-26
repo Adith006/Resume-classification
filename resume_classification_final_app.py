@@ -22,12 +22,7 @@ from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 from keybert import KeyBERT
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-st.set_option('deprecation.showPyplotGlobalUse', False)
-
-pd.set_option('display.max_columns', None)  # To display all columns
-pd.set_option('display.expand_frame_repr', True)  # To expand the DataFrame width
-pd.set_option('display.max_colwidth', None)
-
+import nltk 
 my_stop_words = set(stopwords.words("english"))
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -38,6 +33,16 @@ nltk.download('punkt')
 nltk.download('conll2000')
 nltk.download('brown')
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
+
+
+  
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
+pd.set_option('display.max_columns', None)  # To display all columns
+pd.set_option('display.expand_frame_repr', True)  # To expand the DataFrame width
+pd.set_option('display.max_colwidth', None)
+
+
 
 #cleaning the corpus with regex library
 def process_resume(resume_text):
