@@ -287,20 +287,23 @@ if page == "Resume classification":
     classify = st.sidebar.button("classify")
     
 def main():
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
-    if uploaded_files:
-        all_text = []
+   uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
+   if uploaded_files:
+    all_text = []
+    
+    # Iterate over the uploaded files and process each resume
+    for file in uploaded_files:
+        # Create a temporary file to save the uploaded resume
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(file.read())
+            temp_filepath = temp_file.name
+            
+        # Obtain the filename from the UploadedFile object
+        filename = file.name
         
-        # Iterate over the uploaded files and process each resume
-        for file in uploaded_files:
-            # Create a temporary file to save the uploaded resume
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(file.read())
-                temp_filepath = temp_file.name
-                
-            text = get_resume_text(temp_filepath,file)
-            if text:
-                all_text.append(text)
+        text = get_resume_text(temp_filepath, filename)  # Pass the filename instead of the UploadedFile object
+        if text:
+            all_text.append(text)
         
         # Output the number of resumes and their indices
         #st.write("Number of Resumes:", len(all_text))
