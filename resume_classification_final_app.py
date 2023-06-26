@@ -290,10 +290,11 @@ if page == "Resume classification":
     classify = st.sidebar.button("classify")
     
     def main():
-        uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
-        if uploaded_files:
-            all_text = []
-    
+       st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
+    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
+    if uploaded_files:
+        all_text = []
+
         for file in uploaded_files:
             # Create a temporary file to save the uploaded resume
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -313,11 +314,11 @@ if page == "Resume classification":
         #for i, text in enumerate(all_text):
             #st.write(f"Resume {i+1}:")
             #st.write(text)
-    
-        predictions = []  # List to store the predictions
-        names = []
-        name_list = []
-        category_list = []
+        
+            predictions = []  # List to store the predictions
+            names = []
+            name_list = []
+            category_list = []
     
         if classify:
             for resume_text in all_text:
