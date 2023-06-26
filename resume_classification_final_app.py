@@ -100,8 +100,8 @@ def convert_resume_to_text(file):
         # Converting .doc file to .docx
         docx_file = str(file) + 'x'
         os.system('antiword "' + str(file) + '" > "' + docx_file + '"')
-        with open(docx_file) as f:
-            text = f.read()
+        with open(docx_file, 'rb') as f:
+            text = f.read().decode('utf-8')
         os.remove(docx_file)
         return text
     elif file.name.endswith('.pdf'):
