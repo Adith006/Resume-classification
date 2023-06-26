@@ -22,8 +22,7 @@ from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 from keybert import KeyBERT
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-import nltk 
-my_stop_words = set(stopwords.words("english"))
+nltk.data.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('vader_lexicon')
@@ -32,6 +31,7 @@ nltk.download('movie_reviews')
 nltk.download('punkt')
 nltk.download('conll2000')
 nltk.download('brown')
+my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
 
 
