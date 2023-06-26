@@ -283,11 +283,7 @@ if page == "Resume classification":
     
     def main():
        st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
-    if uploaded_files:
-        all_text = []
-
-        uploaded_files = st.file_uploader("Upload resumes", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload resumes", accept_multiple_files=True)
     
     if uploaded_files:
         all_text = []
@@ -374,7 +370,7 @@ def main():
         temp_file.write(file.read())
         temp_filepath = temp_file.name
         
-    text = get_resume_text(temp_filepath)
+    text = convert_resume_to_text(temp_filepath)
     if text:
         all_text.append(text)
     if screening:
