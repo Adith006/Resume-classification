@@ -298,7 +298,7 @@ def main():
                 temp_file.write(file.read())
                 temp_filepath = temp_file.name
                 
-            text = get_resume_text(temp_filepath)
+            text = get_resume_text(temp_filepath,file)
             if text:
                 all_text.append(text)
         
