@@ -104,13 +104,13 @@ def convert_resume_to_text(file):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
-        # Converting .doc file to .docx
-        docx_file = file.name + 'x'
-        os.system('antiword "' + file.name + '" > "' + docx_file + '"')
-        with open(docx_file) as f:
-            text = f.read()
-        os.remove(docx_file)
-        return text
+     # Converting .doc file to .docx
+     docx_file = file.name + 'x'
+     subprocess.run(['unoconv', '-f', 'docx', '-o', docx_file, file.name], check=True)
+     with open(docx_file, 'rb') as f:
+         text = f.read().decode('utf-8')
+     os.remove(docx_file)
+     return text
     elif file.name.endswith('.pdf'):
         with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
             
