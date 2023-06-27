@@ -101,19 +101,26 @@ st.sidebar.title("Input data")
 
 
 
+def convert_doc_to_docx(doc_file):
+    docx_file = doc_file + 'x'
+    doc = Document(doc_file)
+    doc.save(docx_file)
+    return docx_file
+
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
         try:
-            doc_file = os.path.join( file)
-            docx_file = doc_file + 'x'
-            if not os.path.exists(docx_file):
-                os.system('antiword "' + doc_file + '" > "' + docx_file + '"')
+            with tempfile.NamedTemporaryFile(suffix='.doc') as temp_file:
+                temp_file.write(file.read())
+                temp_file.flush()
+                doc_file = temp_file.name
+                docx_file = convert_doc_to_docx(doc_file)
                 with open(docx_file) as f:
                     text = f.read()
-                    os.remove(docx_file)
+                os.remove(docx_file)
             return text
         except Exception as e:
             print(f"Error: Failed to extract text from .doc file - {e}")
@@ -219,7 +226,7 @@ def extract_resume_summary(resume_text, max_length=100):
     t5_summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     
     return t5_summary
-
+@st.cache
 def load_model():
     model = KeyBERT("distilbert-base-nli-mean-tokens")
     return model
