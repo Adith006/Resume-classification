@@ -111,9 +111,9 @@ def convert_resume_to_text(file):
             docx_file = temp_file.name + 'x'
             doc = Document(temp_file.name)
             doc.save(docx_file)
-            
-            with open(docx_file) as f:
-                text = f.read()
+
+            # Read the text from the converted .docx file
+            text = docx2txt.process(docx_file)
             os.remove(docx_file)
 
         return text
