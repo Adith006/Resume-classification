@@ -23,7 +23,7 @@ from keybert import KeyBERT
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 #import tempfile
-#import io
+import io
 import tempfile
 import subprocess
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
@@ -109,7 +109,7 @@ def convert_resume_to_text(file):
 
             # Converting .doc file to .docx
             docx_file = temp_file.name + 'x'
-            subprocess.run(['antiword', temp_file.name, '>', docx_file], shell=True, check=True)
+            subprocess.run(['antiword', temp_file.name], stdout=subprocess.PIPE)
             with open(docx_file) as f:
                 text = f.read()
             os.remove(docx_file)
