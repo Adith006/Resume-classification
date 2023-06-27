@@ -28,8 +28,7 @@ import tempfile
 import subprocess
 from docx import Document
 import docx
-from win32com.client import Dispatch
-import pythoncom
+
 
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
