@@ -27,6 +27,7 @@ import io
 import tempfile
 import subprocess
 from docx import Document
+from docxtpl import DocxTemplate
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -97,6 +98,7 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
+
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
@@ -107,9 +109,13 @@ def convert_resume_to_text(file):
             temp_file.write(file.read())
             temp_file.flush()
 
-            # Converting .doc file to text using python-docx
-            doc = Document(temp_file.name)
-            text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+            # Converting .doc file to text using python-docx-template
+            doc = DocxTemplate(temp_file.name)
+            doc.save(temp_file.name + 'x')
+
+            with open(temp_file.name + 'x') as f:
+                text = f.read()
+            os.remove(temp_file.name + 'x')
 
         return text
     elif file.name.endswith('.pdf'):
