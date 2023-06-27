@@ -108,39 +108,39 @@ def convert_doc_to_docx(doc_file):
         doc = Document(doc_file)
         doc.save(docx_file)
         return docx_file
-    except Exception as e:
-        st.write(f"Error converting DOC to DOCX: {e}")
-
-def convert_resume_to_text(file):
-    if file.name.endswith('.docx'):
-        text = docx2txt.process(file)
-        return text
-    elif file.name.endswith('.doc'):
-        doc_file = file.name
-        docx_file = convert_doc_to_docx(doc_file)
-        if docx_file:
-            document = docx.Document(docx_file)
-            paragraphs = [p.text for p in document.paragraphs]
-            text = "\n".join(paragraphs)
-            os.remove(docx_file)
-            return text
-    elif file.name.endswith('.pdf'):
-        with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
-            
-            temp_file.write(file.read())
-            temp_file.flush()
-
-            # Read the text from the PDF file
-            with open(temp_file.name, 'rb') as f:
-                reader = PyPDF2.PdfReader(f)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text()
-
-        return text
-    else:
-        print('Error: Unsupported file format')
-        return ''
+   # except Exception as e:
+        #st.write(f"Error converting DOC to DOCX: {e}")
+        
+        def convert_resume_to_text(file):
+            if file.name.endswith('.docx'):
+                text = docx2txt.process(file)
+                return text
+            elif file.name.endswith('.doc'):
+                doc_file = file.name
+                docx_file = convert_doc_to_docx(doc_file)
+                if docx_file:
+                    document = docx.Document(docx_file)
+                    paragraphs = [p.text for p in document.paragraphs]
+                    text = "\n".join(paragraphs)
+                    os.remove(docx_file)
+                    return text
+            elif file.name.endswith('.pdf'):
+                with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
+                    
+                    temp_file.write(file.read())
+                    temp_file.flush()
+        
+                    # Read the text from the PDF file
+                    with open(temp_file.name, 'rb') as f:
+                        reader = PyPDF2.PdfReader(f)
+                        text = ""
+                        for page in reader.pages:
+                            text += page.extract_text()
+        
+                return text
+            else:
+                print('Error: Unsupported file format')
+                return ''
 
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
