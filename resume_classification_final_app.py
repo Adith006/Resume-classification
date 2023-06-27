@@ -93,19 +93,21 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 def convert_resume_to_text(file):
+    file_path = file.temporary_path()  # Get the file path from the UploadedFile object
+
     if file.name.endswith('.docx'):
-        text = docx2txt.process(file)
+        text = docx2txt.process(file_path)
         return text
     elif file.name.endswith('.doc'):
         # Converting .doc file to .docx
-        docx_file = file + 'x'
-        os.system('antiword "' + file + '" > "' + docx_file + '"')
+        docx_file = file_path + 'x'
+        os.system('antiword "' + file_path + '" > "' + docx_file + '"')
         with open(docx_file) as f:
             text = f.read()
         os.remove(docx_file)
         return text
     elif file.name.endswith('.pdf'):
-        with open(file, 'rb') as f:
+        with open(file_path, 'rb') as f:
             reader = PyPDF2.PdfReader(f)
             text = ""
             for page in reader.pages:
@@ -283,7 +285,7 @@ if page == "Resume classification":
     
     def main():
        st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type=['doc','docx','pdf'])
+    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
     
     if uploaded_files:
         all_text = []
