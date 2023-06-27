@@ -27,7 +27,6 @@ import io
 import tempfile
 import subprocess
 from docx import Document
-import docx
 
 
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
@@ -103,9 +102,29 @@ st.sidebar.title("Input data")
 
 
 def convert_resume_to_text(file):
-    if file.name.endswith('.doc'):
+    if file.name.endswith('.docx'):
         text = docx2txt.process(file)
         return text
+    elif file.name.endswith('.doc'):
+        try:
+            # Save the .doc file to a temporary file on disk
+            with tempfile.NamedTemporaryFile(suffix='.doc') as temp_file:
+                temp_file.write(file.read())
+                temp_file.flush()
+
+                # Converting .doc file to .docx using python-docx
+                docx_file = temp_file.name + 'x'
+                doc = Document(temp_file.name)
+                doc.save(docx_file)
+
+                with open(docx_file) as f:
+                    text = f.read()
+                os.remove(docx_file)
+
+            return text
+        except Exception as e:
+            print(f"Error: Failed to extract text from .doc file - {e}")
+            return ''
     elif file.name.endswith('.pdf'):
         with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
             temp_file.write(file.read())
