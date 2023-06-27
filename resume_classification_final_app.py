@@ -99,48 +99,29 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
-
-
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
-        try:
-            # Save the .doc file to a temporary file on disk
-            with tempfile.NamedTemporaryFile(suffix='.doc') as temp_file:
-                temp_file.write(file.read())
-                temp_file.flush()
-
-                # Converting .doc file to .docx using python-docx
-                docx_file = temp_file.name + 'x'
-                doc = Document(temp_file.name)
-                doc.save(docx_file)
-
-                with open(docx_file) as f:
-                    text = f.read()
-                os.remove(docx_file)
-
-            return text
-        except Exception as e:
-            print(f"Error: Failed to extract text from .doc file - {e}")
-            return ''
+        # Converting .doc file to .docx
+        docx_file = file + 'x'
+        os.system('antiword "' + file + '" > "' + docx_file + '"')
+        with open(docx_file) as f:
+            text = f.read()
+        os.remove(docx_file)
+        return text
     elif file.name.endswith('.pdf'):
-        with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
-            temp_file.write(file.read())
-            temp_file.flush()
-
-            # Read the text from the PDF file
-            with open(temp_file.name, 'rb') as f:
-                reader = PyPDF2.PdfReader(f)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text()
-
+        with open(file, 'rb') as f:
+            reader = PyPDF2.PdfReader(f)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text()
         return text
     else:
         print('Error: Unsupported file format')
         return ''
+
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
 # load pre-trained model
