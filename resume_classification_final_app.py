@@ -280,13 +280,11 @@ def parse_resume(resume_text):
 if page == "Resume classification":
     st.markdown("Overview")
    
-    st.write("This app extracts information from your resume and gives you an idea about how well your resume matches to the description of job portals, the idea is to classify resume according to the category")
+    st.write("This app extracts information from your resume and gives you an idea about how well your resume matches to the description of job portals. The idea is to classify resumes according to the category.")
     st.markdown('<hr>', unsafe_allow_html=True)
-    classify = st.sidebar.button("classify")
+    classify = st.sidebar.button("Classify")
     
     def main():
-   
-      
         file_paths = st.text_input("Enter file paths (separated by commas)", help="Example: path/to/file1.docx, path/to/file2.pdf")
         file_paths = [path.strip() for path in file_paths.split(",")]
         
@@ -298,8 +296,8 @@ if page == "Resume classification":
                     text = convert_resume_to_text(path)
                     if text:
                         all_text.append(text)
-        else:
-            st.warning(f"File not found: {file_path}")
+                else:
+                    st.warning(f"File not found: {file_path}")
         
             predictions = []  # List to store the predictions
             names = []
@@ -345,10 +343,9 @@ if page == "Resume classification":
         
                 # Display the dataframe in Streamlit
                 st.write(df)
-                
+    
     if __name__ == "__main__":
-                 main()           
-
+        main()
 if page == "Resume Screening":
     screening = st.sidebar.button("Screening")
     def main():
