@@ -102,19 +102,20 @@ st.sidebar.title("Input data")
 
 
 def convert_resume_to_text(file):
-    if file.name.endswith('.docx'):
-        text = docx2txt.process(file)
-        return text
-    elif file.name.endswith('.doc'):
+    if file.name.endswith('.doc'):
         try:
-            doc_file = os.path.join( file)
+            doc_file = os.path.join(file)
             docx_file = doc_file + 'x'
             if not os.path.exists(docx_file):
-                os.system('antiword "' + doc_file + '" > "' + docx_file + '"')
+                subprocess.run(["antiword", doc_file, "-o", docx_file])
                 with open(docx_file) as f:
                     text = f.read()
                     os.remove(docx_file)
-            return text
+                return text
+            else:
+                with open(docx_file) as f:
+                    text = f.read()
+                return text
         except Exception as e:
             print(f"Error: Failed to extract text from .doc file - {e}")
             return ''
