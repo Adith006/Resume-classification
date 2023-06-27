@@ -92,5 +92,6 @@ regex==2023.6.3
 python-docx==0.8.11
 doc==0.1.0
 pywin32==306
+Python==3.9.11
 
 
