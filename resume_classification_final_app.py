@@ -107,14 +107,9 @@ def convert_resume_to_text(file):
             temp_file.write(file.read())
             temp_file.flush()
 
-            # Converting .doc file to .docx using python-docx
-            docx_file = temp_file.name + 'x'
+            # Converting .doc file to text using python-docx
             doc = Document(temp_file.name)
-            doc.save(docx_file)
-            
-            with open(docx_file) as f:
-                text = f.read()
-            os.remove(docx_file)
+            text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
 
         return text
     elif file.name.endswith('.pdf'):
