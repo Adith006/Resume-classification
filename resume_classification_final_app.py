@@ -107,11 +107,9 @@ def convert_resume_to_text(file):
         return text
     elif file.name.endswith('.doc'):
         try:
-            word = win32.Dispatch("Word.Application")
-            doc = word.Documents.Open(file.name)
-            text = doc.Content.Text
-            doc.Close()
-            word.Quit()
+            doc = Document(file)
+            paragraphs = [p.text for p in doc.paragraphs]
+            text = '\n'.join(paragraphs)
             return text
         except Exception as e:
             print(f"Error: Failed to extract text from .doc file - {e}")
