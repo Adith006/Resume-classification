@@ -350,18 +350,18 @@ if page == "Resume classification":
                 name = extract_name_from_resume(cleaned_resume)
                 names.append(name)
     
-            # Output the predictions for each resume
-            for i, (prediction_id, name) in enumerate(zip(predictions, names)):
-                category_name = category_mapping.get(prediction_id, "unknown")
-                name_list.append(name)
-                category_list.append(category_name)
-    
-            # Create a dataframe from the lists
-            data = {'Name': name_list, 'Category': category_list}
-            df = pd.DataFrame(data)
-    
-            # Display the dataframe in Streamlit
-            st.write(df)
+                # Output the predictions for each resume
+                for i, (prediction_id, name) in enumerate(zip(predictions, names)):
+                    category_name = category_mapping.get(prediction_id, "unknown")
+                    name_list.append(name)
+                    category_list.append(category_name)
+        
+                # Create a dataframe from the lists
+                data = {'Name': name_list, 'Category': category_list}
+                df = pd.DataFrame(data)
+        
+                # Display the dataframe in Streamlit
+                st.write(df)
             
     if __name__ == "__main__":
                  main()           
