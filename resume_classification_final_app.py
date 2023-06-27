@@ -101,26 +101,26 @@ st.sidebar.title("Input data")
 
 
 
-def convert_doc_to_docx(doc_file):
-    docx_file = doc_file + 'x'
-    doc = Document(doc_file)
-    doc.save(docx_file)
-    return docx_file
-
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
         try:
+            # Save the .doc file to a temporary file on disk
             with tempfile.NamedTemporaryFile(suffix='.doc') as temp_file:
                 temp_file.write(file.read())
                 temp_file.flush()
-                doc_file = temp_file.name
-                docx_file = convert_doc_to_docx(doc_file)
+
+                # Converting .doc file to .docx using python-docx
+                docx_file = temp_file.name + 'x'
+                doc = Document(temp_file.name)
+                doc.save(docx_file)
+
                 with open(docx_file) as f:
                     text = f.read()
                 os.remove(docx_file)
+
             return text
         except Exception as e:
             print(f"Error: Failed to extract text from .doc file - {e}")
