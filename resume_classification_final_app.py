@@ -310,6 +310,10 @@ if page == "Resume classification":
         text = convert_resume_to_text(file)
         if text: 
             all_text.append(text)
+            predictions = []  # List to store the predictions
+            names = []
+            name_list = []
+            category_list = []
     
         # Output the number of resumes and their indices
         #st.write("Number of Resumes:", len(all_text))
@@ -318,10 +322,7 @@ if page == "Resume classification":
             #st.write(f"Resume {i+1}:")
             #st.write(text)
         
-            predictions = []  # List to store the predictions
-            names = []
-            name_list = []
-            category_list = []
+          
     
         if classify:
             for resume_text in all_text:
@@ -351,17 +352,17 @@ if page == "Resume classification":
                 names.append(name)
     
                 # Output the predictions for each resume
-                for i, (prediction_id, name) in enumerate(zip(predictions, names)):
-                    category_name = category_mapping.get(prediction_id, "unknown")
-                    name_list.append(name)
-                    category_list.append(category_name)
-        
-                # Create a dataframe from the lists
-                data = {'Name': name_list, 'Category': category_list}
-                df = pd.DataFrame(data)
-        
-                # Display the dataframe in Streamlit
-                st.write(df)
+            for i, (prediction_id, name) in enumerate(zip(predictions, names)):
+                category_name = category_mapping.get(prediction_id, "unknown")
+                name_list.append(name)
+                category_list.append(category_name)
+    
+            # Create a dataframe from the lists
+            data = {'Name': name_list, 'Category': category_list}
+            df = pd.DataFrame(data)
+    
+            # Display the dataframe in Streamlit
+            st.write(df)
             
     if __name__ == "__main__":
                  main()           
