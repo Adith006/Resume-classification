@@ -23,7 +23,8 @@ from keybert import KeyBERT
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 #import tempfile
-import io
+#import io
+import tempfile
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -99,18 +100,18 @@ def convert_resume_to_text(file):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
-        # Save the .doc file to a temporary BytesIO object
-        temp_file = io.BytesIO()
-        temp_file.write(file.read())
+        # Save the .doc file to a temporary file on disk
+        with tempfile.NamedTemporaryFile(suffix='.doc') as temp_file:
+            temp_file.write(file.read())
+            temp_file.flush()
 
-        # Converting .doc file to .docx
-        docx_file = temp_file.name + 'x'
-        os.system('antiword "' + temp_file.name + '" > "' + docx_file + '"')
-        with open(docx_file) as f:
-            text = f.read()
-        os.remove(docx_file)
+            # Converting .doc file to .docx
+            docx_file = temp_file.name + 'x'
+            os.system('antiword "' + temp_file.name + '" > "' + docx_file + '"')
+            with open(docx_file) as f:
+                text = f.read()
+            os.remove(docx_file)
 
-        temp_file.close()
         return text
     elif file.name.endswith('.pdf'):
         with open(file, 'rb') as f:
