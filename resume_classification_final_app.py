@@ -97,27 +97,20 @@ def convert_resume_to_text(file):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
-        try:
-            from docx import Document
-
-            doc = Document(file)
-            text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-            return text
-        except ImportError:
-            print('Error: python-docx library is not installed.')
-            return ''
+        # Converting .doc file to .docx
+        docx_file = file + 'x'
+        os.system('antiword "' + file + '" > "' + docx_file + '"')
+        with open(docx_file) as f:
+            text = f.read()
+        os.remove(docx_file)
+        return text
     elif file.name.endswith('.pdf'):
-        try:
-            import fitz
-
-            with fitz.open(file) as doc:
-                text = ""
-                for page in doc:
-                    text += page.get_text()
-            return text
-        except ImportError:
-            print('Error: PyMuPDF library is not installed.')
-            return ''
+        with open(file, 'rb') as f:
+            reader = PyPDF2.PdfReader(f)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text()
+        return text
     else:
         print('Error: Unsupported file format')
         return ''
