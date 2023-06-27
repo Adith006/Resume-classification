@@ -307,7 +307,7 @@ if page == "Resume classification":
     
     def main():
        st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
+    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type = ['.doc','.docx','.pdf','.txt'])
     
     if uploaded_files:
         all_text = []
