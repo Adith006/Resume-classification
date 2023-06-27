@@ -100,22 +100,14 @@ st.sidebar.title("Input data")
 
 
 def convert_resume_to_text(file):
-    if file.name.endswith('.docx'):
-        text = docx2txt.process(file)
-        return text
-    elif file.name.endswith('.doc'):
-        # Save the .doc file to a temporary file on disk
-        with tempfile.NamedTemporaryFile(suffix='.doc') as temp_file:
+    if file.name.endswith('.docx') or file.name.endswith('.doc'):
+        # Save the file to a temporary file on disk
+        with tempfile.NamedTemporaryFile(suffix='.docx') as temp_file:
             temp_file.write(file.read())
             temp_file.flush()
 
-            # Converting .doc file to text using python-docx-template
-            doc = DocxTemplate(temp_file.name)
-            doc.save(temp_file.name + 'x')
-
-            with open(temp_file.name + 'x') as f:
-                text = f.read()
-            os.remove(temp_file.name + 'x')
+            # Converting .doc and .docx files to text using python-docx
+            text = docx2txt.process(temp_file.name)
 
         return text
     elif file.name.endswith('.pdf'):
@@ -132,7 +124,7 @@ def convert_resume_to_text(file):
 
         return text
     else:
-        print('Error: Unsupported file format')
+        st.error('Error: Unsupported file format')
         return ''
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
