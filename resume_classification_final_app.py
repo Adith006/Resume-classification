@@ -25,6 +25,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 #import tempfile
 #import io
 import tempfile
+import subprocess
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -95,6 +96,7 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
+
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
@@ -107,7 +109,7 @@ def convert_resume_to_text(file):
 
             # Converting .doc file to .docx
             docx_file = temp_file.name + 'x'
-            os.system('antiword "' + temp_file.name + '" > "' + docx_file + '"')
+            subprocess.run(['antiword', temp_file.name, '>', docx_file], shell=True, check=True)
             with open(docx_file) as f:
                 text = f.read()
             os.remove(docx_file)
@@ -123,7 +125,6 @@ def convert_resume_to_text(file):
     else:
         print('Error: Unsupported file format')
         return ''
-
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
 # load pre-trained model
