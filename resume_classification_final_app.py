@@ -105,14 +105,14 @@ def convert_resume_to_text(file):
         return text
     elif file.name.endswith('.doc'):
         # Converting .doc file to .docx
-        docx_file = file + 'x'
-        os.system('antiword "' + file + '" > "' + docx_file + '"')
+        docx_file = file.name + 'x'
+        os.system('antiword "' + file.name + '" > "' + docx_file + '"')
         with open(docx_file) as f:
             text = f.read()
         os.remove(docx_file)
         return text
     elif file.name.endswith('.pdf'):
-        with open(file, 'rb') as f:
+        with open(file.name, 'rb') as f:
             reader = PyPDF2.PdfReader(f)
             text = ""
             for page in reader.pages:
