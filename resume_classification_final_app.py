@@ -26,6 +26,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import io
 import tempfile
 import subprocess
+from docx import Document
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -106,9 +107,11 @@ def convert_resume_to_text(file):
             temp_file.write(file.read())
             temp_file.flush()
 
-            # Converting .doc file to .docx
+            # Converting .doc file to .docx using python-docx
             docx_file = temp_file.name + 'x'
-            subprocess.run(['antiword', temp_file.name], stdout=subprocess.PIPE)
+            doc = Document(temp_file.name)
+            doc.save(docx_file)
+            
             with open(docx_file) as f:
                 text = f.read()
             os.remove(docx_file)
