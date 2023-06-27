@@ -27,7 +27,8 @@ import io
 import tempfile
 import subprocess
 from docx import Document
-import doc
+
+import win32com.client as win32
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -99,18 +100,22 @@ st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
 
+
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
-        # Read the text from the .doc file using python-doc library
-        with open(file, 'rb') as f:
-            doc_file = doc.Document(f)
-            text = '\n'.join([p.text for p in doc_file.paragraphs])
-        return text
-
-        return text
+        try:
+            word = win32.Dispatch("Word.Application")
+            doc = word.Documents.Open(file.name)
+            text = doc.Content.Text
+            doc.Close()
+            word.Quit()
+            return text
+        except Exception as e:
+            print(f"Error: Failed to extract text from .doc file - {e}")
+            return ''
     elif file.name.endswith('.pdf'):
         with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
             temp_file.write(file.read())
