@@ -22,7 +22,8 @@ from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 from keybert import KeyBERT
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-import tempfile
+#import tempfile
+import io
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -92,22 +93,27 @@ with st.container():
 
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
-def convert_resume_to_text(file):
-    file_path = file.temporary_path()  # Get the file path from the UploadedFile object
 
+def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
-        text = docx2txt.process(file_path)
+        text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
+        # Save the .doc file to a temporary BytesIO object
+        temp_file = io.BytesIO()
+        temp_file.write(file.read())
+
         # Converting .doc file to .docx
-        docx_file = file_path + 'x'
-        os.system('antiword "' + file_path + '" > "' + docx_file + '"')
+        docx_file = temp_file.name + 'x'
+        os.system('antiword "' + temp_file.name + '" > "' + docx_file + '"')
         with open(docx_file) as f:
             text = f.read()
         os.remove(docx_file)
+
+        temp_file.close()
         return text
     elif file.name.endswith('.pdf'):
-        with open(file_path, 'rb') as f:
+        with open(file, 'rb') as f:
             reader = PyPDF2.PdfReader(f)
             text = ""
             for page in reader.pages:
