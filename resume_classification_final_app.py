@@ -27,6 +27,8 @@ import io
 import tempfile
 import subprocess
 from docx import Document
+import docx
+from docx.api import Document
 
 
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
@@ -99,18 +101,29 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
+
+def convert_doc_to_docx(doc_file):
+    docx_file = doc_file + 'x'
+    try:
+        doc = Document(doc_file)
+        doc.save(docx_file)
+        return docx_file
+    except Exception as e:
+        st.write(f"Error converting DOC to DOCX: {e}")
+
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
         return text
     elif file.name.endswith('.doc'):
-        # Converting .doc file to .docx
-        docx_file = file.name + 'x'
-        os.system('antiword "' + file.name + '" > "' + docx_file + '"')
-        with open(docx_file) as f:
-            text = f.read()
-        os.remove(docx_file)
-        return text
+        doc_file = file.name
+        docx_file = convert_doc_to_docx(doc_file)
+        if docx_file:
+            document = docx.Document(docx_file)
+            paragraphs = [p.text for p in document.paragraphs]
+            text = "\n".join(paragraphs)
+            os.remove(docx_file)
+            return text
     elif file.name.endswith('.pdf'):
         with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
             
