@@ -112,11 +112,18 @@ def convert_resume_to_text(file):
         os.remove(docx_file)
         return text
     elif file.name.endswith('.pdf'):
-        with open(file.name, 'rb') as f:
-            reader = PyPDF2.PdfReader(f)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text()
+        with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
+            
+            temp_file.write(file.read())
+            temp_file.flush()
+
+            # Read the text from the PDF file
+            with open(temp_file.name, 'rb') as f:
+                reader = PyPDF2.PdfReader(f)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text()
+
         return text
     else:
         print('Error: Unsupported file format')
