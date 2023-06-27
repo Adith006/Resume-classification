@@ -92,6 +92,7 @@ regex==2023.6.3
 python-docx==0.8.11
 doc==0.1.0
 antiword==0.1.0
+unotools==0.3.3
 
 
 
