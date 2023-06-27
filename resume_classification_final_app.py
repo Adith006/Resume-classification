@@ -10,6 +10,7 @@ import pandas as pd
 import streamlit as st
 import pickle
 import warnings
+warnings.filterwarnings("ignore")
 import re
 import nltk
 from nltk.tokenize import word_tokenize
@@ -29,6 +30,8 @@ import subprocess
 from docx import Document
 import docx
 from docx.api import Document
+
+
 
 
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
