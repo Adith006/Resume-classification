@@ -96,7 +96,6 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
-
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
         text = docx2txt.process(file)
@@ -116,11 +115,17 @@ def convert_resume_to_text(file):
 
         return text
     elif file.name.endswith('.pdf'):
-        with open(file, 'rb') as f:
-            reader = PyPDF2.PdfReader(f)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text()
+        with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
+            temp_file.write(file.read())
+            temp_file.flush()
+
+            # Read the text from the PDF file
+            with open(temp_file.name, 'rb') as f:
+                reader = PyPDF2.PdfReader(f)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text()
+
         return text
     else:
         print('Error: Unsupported file format')
