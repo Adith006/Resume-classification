@@ -28,6 +28,7 @@ import tempfile
 import subprocess
 from docx import Document
 from docxtpl import DocxTemplate
+import pathlib
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -285,15 +286,20 @@ if page == "Resume classification":
     
     def main():
    
+      
         file_paths = st.text_input("Enter file paths (separated by commas)", help="Example: path/to/file1.docx, path/to/file2.pdf")
         file_paths = [path.strip() for path in file_paths.split(",")]
         
         if file_paths:
             all_text = []
             for file_path in file_paths:
-                text = convert_resume_to_text(file_path)
-                if text:
-                    all_text.append(text)
+                path = pathlib.Path(file_path)
+                if path.is_file():
+                    text = convert_resume_to_text(path)
+                    if text:
+                        all_text.append(text)
+        else:
+            st.warning(f"File not found: {file_path}")
         
             predictions = []  # List to store the predictions
             names = []
