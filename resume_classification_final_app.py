@@ -98,27 +98,24 @@ with st.container():
 st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
-def convert_resume_to_text(file):
-    if file.name.endswith('.docx'):
-        text = docx2txt.process(file)
+
+def convert_resume_to_text(file_path):
+    if file_path.endswith('.docx') or file_path.endswith('.doc'):
+        # Converting .doc and .docx files to text using python-docx
+        text = docx2txt.process(file_path)
+
         return text
-    elif file.name.endswith('.doc'):
-        # Converting .doc file to .docx
-        docx_file = file + 'x'
-        os.system('antiword "' + file + '" > "' + docx_file + '"')
-        with open(docx_file) as f:
-            text = f.read()
-        os.remove(docx_file)
-        return text
-    elif file.name.endswith('.pdf'):
-        with open(file, 'rb') as f:
+    elif file_path.endswith('.pdf'):
+        # Read the text from the PDF file
+        with open(file_path, 'rb') as f:
             reader = PyPDF2.PdfReader(f)
             text = ""
             for page in reader.pages:
                 text += page.extract_text()
+
         return text
     else:
-        print('Error: Unsupported file format')
+        st.error('Error: Unsupported file format')
         return ''
 #extracting name from the given resume 
 # from spacy.matcher import Matcher
@@ -287,69 +284,62 @@ if page == "Resume classification":
     classify = st.sidebar.button("classify")
     
     def main():
-       st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
-    
-    if uploaded_files:
-        all_text = []
+   
+        file_paths = st.text_input("Enter file paths (separated by commas)", help="Example: path/to/file1.docx, path/to/file2.pdf")
+        file_paths = [path.strip() for path in file_paths.split(",")]
         
-        for file in uploaded_files:
-            text = convert_resume_to_text(file)
-            if text:
-                all_text.append(text)
-    
-        # Output the number of resumes and their indices
-        #st.write("Number of Resumes:", len(all_text))
-        #st.write("Resume Indices:")
-        #for i, text in enumerate(all_text):
-            #st.write(f"Resume {i+1}:")
-            #st.write(text)
+        if file_paths:
+            all_text = []
+            for file_path in file_paths:
+                text = convert_resume_to_text(file_path)
+                if text:
+                    all_text.append(text)
         
             predictions = []  # List to store the predictions
             names = []
             name_list = []
             category_list = []
-    
-        if classify:
-            for resume_text in all_text:
-                cleaned_resume = process_resume(resume_text)
-                cleaned_resume = remove_emoji(cleaned_resume)
-                cleaned_resume = word_tokenize(cleaned_resume)
-                my_stop_words = stopwords.words('english')
-                cleaned_resume = [word for word in cleaned_resume if not word in my_stop_words]
-                nlp = spacy.load('en_core_web_sm')
-                cleaned_resume = nlp(' '.join(cleaned_resume))
-                cleaned_resume = [token.lemma_ for token in cleaned_resume]
-                cleaned_resume = ' '.join(cleaned_resume)
-                #st.write(cleaned_resume)
-    
-                input_feat = loaded_vect.transform([cleaned_resume])
-                prediction_id = loaded_model.predict(input_feat)[0]
-                predictions.append(prediction_id)
-    
-                # Mapping resumes to given categories
-                category_mapping = {
-                    0: 'peoplesoft developers',
-                    1: 'React developers',
-                    2: 'SQL developers',
-                    3: 'Workday resumes',
-                }
-                name = extract_name_from_resume(cleaned_resume)
-                names.append(name)
-    
-            # Output the predictions for each resume
-            for i, (prediction_id, name) in enumerate(zip(predictions, names)):
-                category_name = category_mapping.get(prediction_id, "unknown")
-                name_list.append(name)
-                category_list.append(category_name)
-    
-            # Create a dataframe from the lists
-            data = {'Name': name_list, 'Category': category_list}
-            df = pd.DataFrame(data)
-    
-            # Display the dataframe in Streamlit
-            st.write(df)
-            
+        
+            if classify:
+                for resume_text in all_text:
+                    cleaned_resume = process_resume(resume_text)
+                    cleaned_resume = remove_emoji(cleaned_resume)
+                    cleaned_resume = word_tokenize(cleaned_resume)
+                    my_stop_words = stopwords.words('english')
+                    cleaned_resume = [word for word in cleaned_resume if not word in my_stop_words]
+                    nlp = spacy.load('en_core_web_sm')
+                    cleaned_resume = nlp(' '.join(cleaned_resume))
+                    cleaned_resume = [token.lemma_ for token in cleaned_resume]
+                    cleaned_resume = ' '.join(cleaned_resume)
+                    st.write(cleaned_resume)
+        
+                    input_feat = loaded_vect.transform([cleaned_resume])
+                    prediction_id = loaded_model.predict(input_feat)[0]
+                    predictions.append(prediction_id)
+        
+                    # Mapping resumes to given categories
+                    category_mapping = {
+                        0: 'peoplesoft developers',
+                        1: 'React developers',
+                        2: 'SQL developers',
+                        3: 'Workday resumes',
+                    }
+                    name = extract_name_from_resume(cleaned_resume)
+                    names.append(name)
+        
+                # Output the predictions for each resume
+                for i, (prediction_id, name) in enumerate(zip(predictions, names)):
+                    category_name = category_mapping.get(prediction_id, "unknown")
+                    name_list.append(name)
+                    category_list.append(category_name)
+        
+                # Create a dataframe from the lists
+                data = {'Name': name_list, 'Category': category_list}
+                df = pd.DataFrame(data)
+        
+                # Display the dataframe in Streamlit
+                st.write(df)
+                
     if __name__ == "__main__":
                  main()           
 
