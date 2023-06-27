@@ -28,7 +28,7 @@ import tempfile
 import subprocess
 from docx import Document
 
-import win32com.client as win32
+
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
 nltk.download('wordnet')
