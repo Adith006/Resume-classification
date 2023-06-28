@@ -120,10 +120,7 @@ def convert_resume_to_text(file):
         doc_file = file.name
         docx_file = convert_doc_to_docx(doc_file)
         if docx_file:
-            document = docx.Document(docx_file)
-            paragraphs = [p.text for p in document.paragraphs]
-            text = "\n".join(paragraphs)
-            os.remove(docx_file)
+            text = docx2txt.process(docx_file)
             return text
     elif file.name.endswith('.pdf'):
         with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
