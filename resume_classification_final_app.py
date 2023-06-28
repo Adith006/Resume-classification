@@ -30,7 +30,6 @@ import subprocess
 from docx import Document
 import docx
 from docx.api import Document
-from win32com import client
 
 
 
@@ -108,19 +107,12 @@ st.sidebar.title("Input data")
 
 
 def convert_doc_to_docx(doc_file):
-    ## 1) Initiate an object that interfaces to Word
-        word = client.Dispatch("Word.Application")
-        word.Visible = False 
-    
-    ## 2) Open the Word document to read in
-        _ = word.Documents.Open(doc_file)
- 
-    ## 3) Extract the paragraphs and close the connections
-        doc = word.ActiveDocument
-        paras = doc.Range().text    
-        doc.Close()
-        word.Quit()
-        return paras
+    docx_file = os.path.splitext(doc_file.name)[0] + '.docx'
+    docx_file_path = os.path.join('temp', docx_file)
+    docx_file = convert_doc_to_docx(doc_file, docx_file_path)
+    text = docx2txt.process(docx_file)
+    return text
+
 
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
