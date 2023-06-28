@@ -114,6 +114,8 @@ def convert_doc_to_docx(file_path):
         # Converting .doc file to .docx
         doc_file = file_path
         docx_file = doc_file + 'x'
+        command = f'soffice --headless --convert-to docx "{doc_file}" --outdir temp'
+        os.system(command)
         if not os.path.exists(docx_file):
             os.system('antiword "' + doc_file + '" > "' + docx_file + '"')
             with open(docx_file) as f:
