@@ -227,17 +227,14 @@ def extract_resume_summary(resume_text, max_length=100):
     t5_summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     
     return t5_summary
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_model():
     model = KeyBERT("distilbert-base-nli-mean-tokens")
-    model_copy = pickle.loads(pickle.dumps(model))
-
-    return model_copy
-   
-model_copy = load_model()
+    return model.copy()
+model = load_model()
 
 def extract_keywords(resume):
-    keywords_scores = model_copy.extract_keywords(
+    keywords_scores = model.extract_keywords(
     resume,
     top_n=10,
     keyphrase_ngram_range=(1, 3),
