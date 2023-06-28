@@ -106,18 +106,18 @@ st.sidebar.title("Input data")
 
 
 
-def convert_doc_to_docx(file_path):
-    if file_path.endswith('.docx'):
-        text = docx2txt.process(file_path)
+def convert_doc_to_docx(file):
+    if file.name.endswith('.docx'):
+        text = docx2txt.process(file)
         return text
-    elif file_path.endswith('.doc'):
+    elif file.name.endswith('.doc'):
         # Converting .doc file to .docx
-        doc_file = file_path
+        doc_file = file.name
         docx_file = doc_file + 'x'
 
-        # Open the .doc file and save it as .docx using python-docx
-        doc = Document(doc_file)
-        doc.save(docx_file)
+        # Save the uploaded .doc file as .docx using python-docx
+        with open(docx_file, 'wb') as f:
+            f.write(file.read())
 
         # Read the converted .docx file
         with open(docx_file) as f:
