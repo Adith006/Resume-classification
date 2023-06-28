@@ -114,39 +114,17 @@ def convert_doc_to_docx(file_path):
         # Converting .doc file to .docx
         doc_file = file_path
         docx_file = doc_file + 'x'
-        command = f'soffice --headless --convert-to docx "{doc_file}" --outdir temp'
-        os.system(command)
-        if not os.path.exists(docx_file):
-            os.system('antiword "' + doc_file + '" > "' + docx_file + '"')
-            with open(docx_file) as f:
-                text = f.read()
-            os.remove(docx_file)
-        else:
-            print('info: file with the same name does not exist with a docx extension')
-            text = ''
-        return text
 
-def convert_resume_to_text(file):
-    if file.name.endswith('.docx'):
-        text = docx2txt.process(file)
-        return text
-    elif file.name.endswith('.doc'):
-        doc_file = file.name
-        docx_file = convert_doc_to_docx(doc_file)
-        if docx_file:
-            text = docx2txt.process(docx_file)
-            return text
-    elif file.name.endswith('.pdf'):
-        with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
-            temp_file.write(file.read())
-            temp_file.flush()
+        # Open the .doc file and save it as .docx using python-docx
+        doc = Document(doc_file)
+        doc.save(docx_file)
 
-            # Read the text from the PDF file
-            with open(temp_file.name, 'rb') as f:
-                reader = PyPDF2.PdfReader(f)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text()
+        # Read the converted .docx file
+        with open(docx_file) as f:
+            text = f.read()
+
+        # Remove the temporary .docx file
+        os.remove(docx_file)
 
         return text
     else:
@@ -327,7 +305,7 @@ if page == "Resume classification":
         all_text = []
         
         for file in uploaded_files:
-            text = convert_resume_to_text(file)
+            text = convert_doc_to_docx(file)
             if text:
                 all_text.append(text)
     
@@ -398,7 +376,7 @@ if page == "Resume Screening":
             all_text = []
             
             for file in uploaded_files:
-                text = convert_resume_to_text(file)
+                text = convert_doc_to_docx(file)
                 if text:
                     all_text.append(text)
             if screening:
