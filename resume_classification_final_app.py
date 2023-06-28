@@ -106,8 +106,8 @@ st.sidebar.title("Input data")
 
 
 def convert_doc_to_docx(doc_file):
-    docx_file = os.path.splitext(doc_file.name)[0] + '.docx'
-    doc = docx.Document(doc_file)
+    docx_file = doc_file.name + '.docx'
+    doc = docx.Document(open(doc_file, 'rb'))
     doc.save(docx_file)
     return docx_file
 
