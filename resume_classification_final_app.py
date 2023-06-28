@@ -230,7 +230,7 @@ def extract_resume_summary(resume_text, max_length=100):
 @st.cache
 def load_model():
     model = KeyBERT("distilbert-base-nli-mean-tokens")
-    return model
+    return model.copy()
 model = load_model()
 
 def extract_keywords(resume):
