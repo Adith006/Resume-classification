@@ -107,11 +107,14 @@ st.sidebar.title("Input data")
 
 
 def convert_doc_to_docx(doc_file):
-    docx_file = os.path.splitext(doc_file.name)[0] + '.docx'
-    docx_file_path = os.path.join('temp', docx_file)
-    docx_file = convert_doc_to_docx(doc_file, docx_file_path)
-    text = docx2txt.process(docx_file)
-    return text
+   with open(doc_file, 'rb') as doc_file:
+        docx_file = os.path.splitext(doc_file.name)[0] + '.docx'
+        docx_file = os.path.join('temp', docx_file)
+        # Perform the conversion from DOC to DOCX here
+        # You can use any appropriate library or method for the conversion
+        # Ensure that the resulting DOCX file is saved to `docx_file_path`
+        text = docx2txt.process(docx_file)
+        return text
 
 
 def convert_resume_to_text(file):
