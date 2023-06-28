@@ -106,10 +106,11 @@ st.sidebar.title("Input data")
 
 
 def convert_doc_to_docx(doc_file):
-    docx_file = doc_file + 'x'
-    doc = Document(doc_file)
+    docx_file = os.path.splittext(doc_file.name)[0] + '.docx'
+    doc = docx.Document(doc_file)
     doc.save(docx_file)
     return docx_file
+
 
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
