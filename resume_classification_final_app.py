@@ -106,16 +106,23 @@ st.sidebar.title("Input data")
 
 
 
-def convert_doc_to_docx(doc_file):
-   with open(doc_file, 'rb') as doc_file:
-        docx_file = os.path.splitext(doc_file.name)[0] + '.docx'
-        docx_file = os.path.join('temp', docx_file)
-        # Perform the conversion from DOC to DOCX here
-        # You can use any appropriate library or method for the conversion
-        # Ensure that the resulting DOCX file is saved to `docx_file_path`
-        text = docx2txt.process(docx_file)
+def convert_doc_to_docx(file_path):
+    if file_path.endswith('.docx'):
+        text = docx2txt.process(file_path)
         return text
-
+    elif file_path.endswith('.doc'):
+        # Converting .doc file to .docx
+        doc_file = file_path
+        docx_file = doc_file + 'x'
+        if not os.path.exists(docx_file):
+            os.system('antiword "' + doc_file + '" > "' + docx_file + '"')
+            with open(docx_file) as f:
+                text = f.read()
+            os.remove(docx_file)
+        else:
+            print('info: file with the same name does not exist with a docx extension')
+            text = ''
+        return text
 
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
