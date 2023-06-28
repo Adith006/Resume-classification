@@ -138,7 +138,6 @@ def convert_resume_to_text(file):
             return text
     elif file.name.endswith('.pdf'):
         with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_file:
-            
             temp_file.write(file.read())
             temp_file.flush()
 
@@ -322,9 +321,9 @@ if page == "Resume classification":
     
     def main():
        st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-    uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type=['.doc','.docx','.pdf','.txt'])
+       uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type=['.doc','.docx','.pdf','.txt'])
     
-    if uploaded_files:
+       if uploaded_files:
         all_text = []
         
         for file in uploaded_files:
