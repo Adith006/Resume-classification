@@ -105,12 +105,12 @@ st.markdown('<hr>', unsafe_allow_html=True)
 st.sidebar.title("Input data") 
 
 
+
 def convert_doc_to_docx(doc_file):
-    docx_file = doc_file.name + '.docx'
-    doc = docx.Document(open(doc_file, 'rb'))
+    docx_file = os.path.splitext(doc_file)[0] + '.docx'
+    doc = docx.Document(doc_file)
     doc.save(docx_file)
     return docx_file
-
 
 def convert_resume_to_text(file):
     if file.name.endswith('.docx'):
