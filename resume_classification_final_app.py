@@ -230,11 +230,14 @@ def extract_resume_summary(resume_text, max_length=100):
 @st.cache
 def load_model():
     model = KeyBERT("distilbert-base-nli-mean-tokens")
-    return model.copy()
-model = load_model()
+    model_copy = pickle.loads(pickle.dumps(model))
+
+    return model_copy
+   
+model_copy = load_model()
 
 def extract_keywords(resume):
-    keywords_scores = model.extract_keywords(
+    keywords_scores = model_copy.extract_keywords(
     resume,
     top_n=10,
     keyphrase_ngram_range=(1, 3),
