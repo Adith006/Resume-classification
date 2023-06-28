@@ -120,8 +120,17 @@ def convert_doc_to_docx(file):
             f.write(file.read())
 
         # Read the converted .docx file
-        with open(docx_file) as f:
-            text = f.read()
+        encodings = ['utf-8', 'latin-1']  # Specify the encodings to try
+        for encoding in encodings:
+            try:
+                with open(docx_file, encoding=encoding) as f:
+                    text = f.read()
+                break
+            except UnicodeDecodeError:
+                continue
+        else:
+            print(f'Error: Unable to decode the file using supported encodings: {encodings}')
+            text = ''
 
         # Remove the temporary .docx file
         os.remove(docx_file)
