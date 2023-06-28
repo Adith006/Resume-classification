@@ -106,20 +106,24 @@ st.sidebar.title("Input data")
 
 
 
-
 def convert_doc_to_docx(file_path):
     if file_path.endswith('.docx'):
-        doc = Document(file_path)
-        text = ' '.join([p.text for p in doc.paragraphs])
+        text = docx2txt.process(file_path)
         return text
     elif file_path.endswith('.doc'):
-        # Perform conversion from DOC to DOCX using python-docx
-        doc = Document(file_path)
-        docx_file = file_path + 'x'
-        doc.save(docx_file)
-        with open(docx_file, 'rb') as f:
-            text = ' '.join([p.text for p in Document(f).paragraphs])
-        os.remove(docx_file)
+        # Converting .doc file to .docx
+        doc_file = file_path
+        docx_file = doc_file + 'x'
+        command = f'soffice --headless --convert-to docx "{doc_file}" --outdir temp'
+        os.system(command)
+        if not os.path.exists(docx_file):
+            os.system('antiword "' + doc_file + '" > "' + docx_file + '"')
+            with open(docx_file) as f:
+                text = f.read()
+            os.remove(docx_file)
+        else:
+            print('info: file with the same name does not exist with a docx extension')
+            text = ''
         return text
 
 def convert_resume_to_text(file):
