@@ -82,7 +82,7 @@ jedi==0.18.1
 keybert==0.7.0
 docx==0.2.4
 doc2text==0.2.4
-en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0-py3-none-any.whl
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
 regex==2023.6.3
 python-docx==0.8.11
 doc==0.1.0
