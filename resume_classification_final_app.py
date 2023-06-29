@@ -120,7 +120,7 @@ def convert_doc_to_docx(file):
             f.write(file.read())
 
         # Read the converted .docx file
-        encodings = ['utf-8', 'latin-1']  # Specify the encodings to try
+        encodings = ['utf-8','latin-1']  # Specify the encodings to try
         for encoding in encodings:
             try:
                 with open(docx_file, encoding=encoding) as f:
@@ -320,8 +320,8 @@ if page == "Resume classification":
     classify = st.sidebar.button("classify")
     
     def main():
-       st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-       uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type=['.doc','.docx','.pdf','.txt'])
+       st.sidebar.error("Supports DOCX, DOC, PDF")
+       uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type=['.doc','.docx','.pdf'])
     
        if uploaded_files:
         all_text = []
@@ -329,60 +329,48 @@ if page == "Resume classification":
         for file in uploaded_files:
             text = convert_doc_to_docx(file)
             if text:
-                all_text.append(text)
-    
-        # Output the number of resumes and their indices
-        #st.write("Number of Resumes:", len(all_text))
-        #st.write("Resume Indices:")
-        #for i, text in enumerate(all_text):
-            #st.write(f"Resume {i+1}:")
-            #st.write(text)
-        
-            predictions = []  # List to store the predictions
-            names = []
-            name_list = []
-            category_list = []
-    
-        if classify:
-            for resume_text in all_text:
-                cleaned_resume = process_resume(resume_text)
-                cleaned_resume = remove_emoji(cleaned_resume)
-                cleaned_resume = word_tokenize(cleaned_resume)
-                my_stop_words = stopwords.words('english')
-                cleaned_resume = [word for word in cleaned_resume if not word in my_stop_words]
-                nlp = spacy.load('en_core_web_sm')
-                cleaned_resume = nlp(' '.join(cleaned_resume))
-                cleaned_resume = [token.lemma_ for token in cleaned_resume]
-                cleaned_resume = ' '.join(cleaned_resume)
-                #st.write(cleaned_resume)
-    
-                input_feat = loaded_vect.transform([cleaned_resume])
-                prediction_id = loaded_model.predict(input_feat)[0]
-                predictions.append(prediction_id)
-    
-                # Mapping resumes to given categories
-                category_mapping = {
-                    0: 'peoplesoft developers',
-                    1: 'React developers',
-                    2: 'SQL developers',
-                    3: 'Workday resumes',
-                }
-                name = extract_name_from_resume(cleaned_resume)
-                names.append(name)
-    
-            # Output the predictions for each resume
-            for i, (prediction_id, name) in enumerate(zip(predictions, names)):
-                category_name = category_mapping.get(prediction_id, "unknown")
-                name_list.append(name)
-                category_list.append(category_name)
-    
-            # Create a dataframe from the lists
-            data = {'Name': name_list, 'Category': category_list}
-            df = pd.DataFrame(data)
-    
-            # Display the dataframe in Streamlit
-            st.write(df)
+                all_text.append(text)    
+                predictions = []  # List to store the predictions
+                indices = []  # List to store the indices
+                category_list = []
             
+                if classify:
+                    for index, resume_text in enumerate(all_text):
+                        cleaned_resume = process_resume(resume_text)
+                        cleaned_resume = remove_emoji(cleaned_resume)
+                        cleaned_resume = word_tokenize(cleaned_resume)
+                        my_stop_words = stopwords.words('english')
+                        cleaned_resume = [word for word in cleaned_resume if not word in my_stop_words]
+                        nlp = spacy.load('en_core_web_sm')
+                        cleaned_resume = nlp(' '.join(cleaned_resume))
+                        cleaned_resume = [token.lemma_ for token in cleaned_resume]
+                        cleaned_resume = ' '.join(cleaned_resume)
+                        #st.write(cleaned_resume)
+                        #st.write(cleaned_resume)
+                    
+                        input_feat = loaded_vect.transform([cleaned_resume])
+                        prediction_id = loaded_model.predict(input_feat)[0]
+                        predictions.append(prediction_id)
+                        indices.append(index)  # Store the index
+                    
+                        # Mapping resumes to given categories
+                        category_mapping = {
+                            0: 'peoplesoft developers',
+                            1: 'React developers',
+                            2: 'SQL developers',
+                            3: 'Workday resumes',
+                        }
+                    
+                        category_name = category_mapping.get(prediction_id, "unknown")
+                        category_list.append(category_name)
+                
+        # Create a dataframe from the lists
+        data = {'Index': indices, 'Category': category_list}  # Change 'Name' to 'Index'
+        df = pd.DataFrame(data)
+        
+        # Display the dataframe in Streamlit
+        st.write(df)
+
     if __name__ == "__main__":
                  main()           
 
@@ -390,8 +378,8 @@ if page == "Resume Screening":
     screening = st.sidebar.button("Screening")
     def main():
     
-        st.sidebar.error("Supports DOCX, DOC, PDF, TXT")
-        uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True)
+        st.sidebar.error("Supports only DOCX, PDF")
+        uploaded_files = st.sidebar.file_uploader("Upload resumes", accept_multiple_files=True,type=['.docx','.pdf'])
         job_description = st.sidebar.text_input("Enter job description to know resume Match",placeholder="Paste Job Description")
         
         if uploaded_files:
