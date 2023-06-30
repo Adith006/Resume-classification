@@ -439,7 +439,7 @@ if page == "Resume Screening":
                     score_list.append(score)
                     summary_list.append(summary)
                 #create dataframe
-                data_scr = {'Name': name_list,'Skills':skill_list,'Education':education_list,'Experience':experience_list,'Keywords':keyword_list,'Summary':summary_list,'Resume Match (in %)':score_list}
+                data_scr = {'Name': name_list,'Skills':skill_list,'Education':education_list,'Experience':experience_list,'Keywords':keyword_list,'Summary':summary_list,'Resume Similiarity (in %)':score_list}
                 df_scr = pd.DataFrame(data_scr)
                 st.table(df_scr)
                 
