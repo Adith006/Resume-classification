@@ -72,7 +72,7 @@ tensorflow==2.12.1
 tensorflow-io-gcs-filesystem==0.31.0
 transformers==4.52.1
 torch>=2.7.1
-torchvision==0.18.2
+torchvision==0.18.0
 sentence-transformers==2.2.2
 sentencepiece==0.1.99
 PyPDF2==3.0.1
