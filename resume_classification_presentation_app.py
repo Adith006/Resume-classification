@@ -47,6 +47,13 @@ nltk.data.path.append(nltk_data_path)
 
 # Download required nltk resources into the specified directory
 nltk.download('punkt', download_dir=nltk_data_path)
+
+# Safe tokenizer fallback to avoid 'punkt_tab' bug
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt", download_dir=nltk_data_path)
+
 nltk.download('stopwords', download_dir=nltk_data_path)
 nltk.download('wordnet', download_dir=nltk_data_path)
 nltk.download('vader_lexicon', download_dir=nltk_data_path)
