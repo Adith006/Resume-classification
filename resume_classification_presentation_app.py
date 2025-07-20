@@ -38,19 +38,19 @@ import nltk
 import warnings
 from nltk.corpus import stopwords
 
-# Set a custom directory for nltk_data
-nltk_data_dir = os.path.join(os.getcwd(), 'nltk_data')
-nltk.data.path.append(nltk_data_dir)
-
-# Download necessary NLTK resources to local folder
-nltk.download('punkt', download_dir=nltk_data_dir)
-nltk.download('stopwords', download_dir=nltk_data_dir)
-nltk.download('wordnet', download_dir=nltk_data_dir)
-nltk.download('vader_lexicon', download_dir=nltk_data_dir)
-nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_dir)
-nltk.download('movie_reviews', download_dir=nltk_data_dir)
-nltk.download('conll2000', download_dir=nltk_data_dir)
-nltk.download('brown', download_dir=nltk_data_dir)
+nltk.download('punkt')  # This is the crucial one that's missing
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('vader_lexicon')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('movie_reviews')
+nltk.download('conll2000')
+nltk.download('brown')
+try:
+    cleaned_resume = word_tokenize(cleaned_resume)
+except LookupError:
+    nltk.download('punkt')
+    cleaned_resume = word_tokenize(cleaned_resume)
 
 # Load stopwords
 my_stop_words = set(stopwords.words("english"))
