@@ -35,14 +35,14 @@ import tempfile
 
 nltk_data_dir = os.path.join(os.getcwd(), 'nltk_data')
 nltk.data.path.append(nltk_data_dir)
-nltk.download('punkt', download_dir=nltk_data_path)
-nltk.download('stopwords', download_dir=nltk_data_path)
-nltk.download('wordnet', download_dir=nltk_data_path)
-nltk.download('vader_lexicon', download_dir=nltk_data_path)
-nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_path)
-nltk.download('movie_reviews', download_dir=nltk_data_path)
-nltk.download('conll2000', download_dir=nltk_data_path)
-nltk.download('brown', download_dir=nltk_data_path)
+nltk.download('punkt', download_dir=nltk_data_dir)
+nltk.download('stopwords', download_dir=nltk_data_dir)
+nltk.download('wordnet', download_dir=nltk_data_dir)
+nltk.download('vader_lexicon', download_dir=nltk_data_dir)
+nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_dir)
+nltk.download('movie_reviews', download_dir=nltk_data_dir)
+nltk.download('conll2000', download_dir=nltk_data_dir)
+nltk.download('brown', download_dir=nltk_data_dir
 my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
 
