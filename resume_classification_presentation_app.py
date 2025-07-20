@@ -46,8 +46,6 @@ my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
 
 
-  
-st.set_option('deprecation.showPyplotGlobalUse', False)
 
 pd.set_option('display.max_columns', None)  # To display all columns
 pd.set_option('display.expand_frame_repr', True)  # To expand the DataFrame width
