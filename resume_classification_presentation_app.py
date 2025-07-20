@@ -15,6 +15,8 @@ import PyPDF2
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 import tempfile
+from transformers import TFT5ForConditionalGeneration, T5Tokenizer
+from keybert import KeyBERT
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
