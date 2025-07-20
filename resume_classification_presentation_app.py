@@ -146,16 +146,7 @@ def extract_keywords(resume):
 
 
 def expDetails(text):
-    """
-    Improved experience extraction from resume text that handles:
-    - Date ranges (e.g., "Jan 2020 - Present")
-    - Duration strings (e.g., "5 years 3 months")
-    - Various time unit representations
-    - Different date formats
-    """
     text = text.lower()
-    
-    # Pattern 1: Extract duration strings (e.g., "5 years 3 months")
     duration_pattern = r'(\d+\.?\d*)\s*(year|years|yr|yrs|month|months|mo|mos)'
     durations = re.finditer(duration_pattern, text)
     
@@ -172,7 +163,6 @@ def expDetails(text):
     if total_months > 0:
         return f"{round(total_months)} Months"
     
-    # Pattern 2: Extract date ranges (e.g., "Jan 2020 - Present")
     date_range_pattern = r'(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}|\d{1,2}/\d{4})\s*(?:-|to)\s*(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}|\d{1,2}/\d{4}|present|current|now)'
     date_ranges = re.finditer(date_range_pattern, text)
     
@@ -186,7 +176,6 @@ def expDetails(text):
             if months > 0:
                 return f"{months} Months"
     
-    # Pattern 3: Fallback to original year/month detection
     for i in range(len(text.split()) - 2):
         if text[i] in ['year', 'years', 'yr', 'yrs', 'month', 'months', 'mo', 'mos']:
             exp_text = ' '.join(text[i-2:i+3])
