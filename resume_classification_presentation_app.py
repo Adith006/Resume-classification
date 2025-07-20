@@ -179,7 +179,6 @@ def parse_resume(resume_text):
 
     return ",".join(education)
 
-# ==================== STREAMLIT APP ====================
 def main():
     st.title("Resume Parser App (This app extracts information from your resume and gives you an idea about how well your resume matches to the description of job portals, the idea is to classify resume according to the job description")")
     page = st.sidebar.radio("Navigate", ["Classification", "Screening"])
@@ -249,7 +248,7 @@ def main():
                       
                         
                         # Extract info
-                        name = extract_name_from_resume(text) or file.name
+                        name = extract_name_from_resume(cleaned)
                         skills = extract_skills(cleaned)
                         education = parse_resume(cleaned)
                         experience = expDetails(cleaned)
