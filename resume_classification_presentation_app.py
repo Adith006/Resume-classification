@@ -35,13 +35,6 @@ import tempfile
 
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
 nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('vader_lexicon')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('movie_reviews')
-nltk.download('punkt')
-nltk.download('conll2000')
-nltk.download('brown')
 my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
 
