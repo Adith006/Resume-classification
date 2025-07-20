@@ -331,7 +331,7 @@ def main():
                 st.dataframe(pd.DataFrame(results))
                 csv = pd.DataFrame(results)
                 st.table(csv)
-                csv= results.to_csv(index = False)
+                csv= results.to_pdf(index = False)
                 st.download_button(
                     label="Download Results",
                     data=csv,
