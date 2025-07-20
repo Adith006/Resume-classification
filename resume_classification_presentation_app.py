@@ -79,8 +79,7 @@ def extract_name_from_resume(text):
     return None
 
 def extract_skills(text):
-    """Skill extraction with spaCy"""
-     skills = ['workday', 'hcm', 'eib', 'picof','workday hcm',
+    skills = ['workday', 'hcm', 'eib', 'picof','workday hcm',
               'workday studio','nnbound/outbound integrations',
               'peoplesoft', 'pia','ccb','birt','peci','ccw','pum','people tools',
               'peoplesoft implementation','peoplesoft components',
