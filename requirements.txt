@@ -62,7 +62,7 @@ wcwidth==0.2.5
 wheel==0.38.1
 wincertstore==0.2
 zipp==3.19.1
-nltk==3.9
+nltk>=3.8
 spacy==3.5.3
 tensorboard>=2.11.0
 tensorboard-data-server>=0.7.0
