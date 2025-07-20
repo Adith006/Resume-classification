@@ -168,7 +168,7 @@ def parse_resume(resume_text):
     education = []
 
     # Define education keywords
-    education_keywords = ['education', 'qualification', 'academic background','university','school','college','degree','engineering','educational qualification']
+    education_keywords = ['education','EDUCATION', 'qualification', 'academic background','university','school','college','degree','engineering','educational qualification']
 
     # Iterate over each sentence in the resume
     for sent in doc.sents:
@@ -280,7 +280,9 @@ def main():
             
             if results:
                 st.dataframe(pd.DataFrame(results))
-                csv = pd.DataFrame(results).to_csv(index=False)
+                csv = pd.DataFrame(results)
+                st.table(csv)
+                csv= results.to_csv(index = False)
                 st.download_button(
                     label="Download Results",
                     data=csv,
