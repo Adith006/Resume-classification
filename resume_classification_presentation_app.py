@@ -17,6 +17,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import tempfile
 from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 from keybert import KeyBERT
+from datetime import datetime
 
 pd.set_option('display.max_columns', None)  # To display all columns
 pd.set_option('display.expand_frame_repr', True)  # To expand the DataFrame width
@@ -142,21 +143,80 @@ def extract_keywords(resume):
     keywords = [keyword for keyword, _ in keywords_scores]
     return ",".join (keywords)
 
+
+
 def expDetails(text):
+    """
+    Improved experience extraction from resume text that handles:
+    - Date ranges (e.g., "Jan 2020 - Present")
+    - Duration strings (e.g., "5 years 3 months")
+    - Various time unit representations
+    - Different date formats
+    """
     text = text.lower()
-    text = text.split()
-
-    for i in range(len(text) - 2):
-       if text[i] == 'year' or text[i] == 'years' or text[i] == 'year(s)':
-            exp_text = ' '.join(text[i - 2: i + 3])
+    
+    # Pattern 1: Extract duration strings (e.g., "5 years 3 months")
+    duration_pattern = r'(\d+\.?\d*)\s*(year|years|yr|yrs|month|months|mo|mos)'
+    durations = re.finditer(duration_pattern, text)
+    
+    total_months = 0
+    for match in durations:
+        value = float(match.group(1))
+        unit = match.group(2)
+        
+        if unit in ['year', 'years', 'yr', 'yrs']:
+            total_months += value * 12
+        elif unit in ['month', 'months', 'mo', 'mos']:
+            total_months += value
+    
+    if total_months > 0:
+        return f"{round(total_months)} Months"
+    
+    # Pattern 2: Extract date ranges (e.g., "Jan 2020 - Present")
+    date_range_pattern = r'(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}|\d{1,2}/\d{4})\s*(?:-|to)\s*(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}|\d{1,2}/\d{4}|present|current|now)'
+    date_ranges = re.finditer(date_range_pattern, text)
+    
+    for match in date_ranges:
+        start_date = parse_date(match.group(1))
+        end_date = parse_date(match.group(2)) if match.group(2) not in ['present', 'current', 'now'] else datetime.now()
+        
+        if start_date and end_date:
+            delta = end_date - start_date
+            months = delta.days // 30  # Approximate
+            if months > 0:
+                return f"{months} Months"
+    
+    # Pattern 3: Fallback to original year/month detection
+    for i in range(len(text.split()) - 2):
+        if text[i] in ['year', 'years', 'yr', 'yrs', 'month', 'months', 'mo', 'mos']:
+            exp_text = ' '.join(text[i-2:i+3])
             matches = re.findall(r'\d+\.?\d*', exp_text)
-            if len(matches) > 0:
+            if matches:
                 experience = float(matches[0])
-                if 'month' in exp_text:
-                    return experience
+                if any(m in exp_text for m in ['month', 'months', 'mo', 'mos']):
+                    return f"{round(experience)} Months"
                 else:
-                    return str(round(experience*12 )) + " Months " 
+                    return f"{round(experience * 12)} Months"
+    
+    return "Experience not specified"
 
+def parse_date(date_str):
+    """Helper function to parse various date formats"""
+    try:
+        # Handle month-year formats (e.g., "Jan 2020" or "01/2020")
+        if '/' in date_str:
+            month, year = map(int, date_str.split('/'))
+            return datetime(year, month, 1)
+        else:
+            month_str, year = date_str.split()
+            month_dict = {
+                'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
+                'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12
+            }
+            month = month_dict.get(month_str[:3].lower(), 1)
+            return datetime(int(year), month, 1)
+    except:
+        return None
     return None
 #extracting education details from the resume
 nlp = spacy.load('en_core_web_sm')
