@@ -26,45 +26,15 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 import tempfile
 
-
-
-
-
-
-
-
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
-
-import os
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-
-# Set up a local nltk_data directory and add it to the nltk data path
-nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
-os.makedirs(nltk_data_path, exist_ok=True)
-nltk.data.path.append(nltk_data_path)
-
-# Download required nltk resources into the specified directory
-nltk.download('punkt', download_dir=nltk_data_path)
-
-# Safe tokenizer fallback to avoid 'punkt_tab' bug
-try:
-    nltk.data.find("tokenizers/punkt")
-except LookupError:
-    nltk.download("punkt", download_dir=nltk_data_path)
-
-nltk.download('stopwords', download_dir=nltk_data_path)
-nltk.download('wordnet', download_dir=nltk_data_path)
-nltk.download('vader_lexicon', download_dir=nltk_data_path)
-nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_path)
-nltk.download('movie_reviews', download_dir=nltk_data_path)
-nltk.download('conll2000', download_dir=nltk_data_path)
-nltk.download('brown', download_dir=nltk_data_path)
-
-# Load stopwords
-my_stop_words = set(stopwords.words("english"))
-
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('vader_lexicon')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('movie_reviews')
+nltk.download('punkt')
+nltk.download('conll2000')
+nltk.download('brown')
 my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
 
