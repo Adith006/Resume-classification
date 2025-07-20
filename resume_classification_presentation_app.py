@@ -39,12 +39,13 @@ import warnings
 from nltk.corpus import stopwords
 
 nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+nltk.data.path.append(nltk_data_path)
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('vader_lexicon')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('movie_reviews')
-nltk.download('punkt')
 nltk.download('conll2000')
 nltk.download('brown')
 my_stop_words = set(stopwords.words("english"))
