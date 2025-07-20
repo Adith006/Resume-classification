@@ -33,7 +33,7 @@ import tempfile
 
 
 
-nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
+nltk.data.path.append("nltk_data_for_github.zip")
 nltk.download('stopwords')
 my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
