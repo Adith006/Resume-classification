@@ -41,6 +41,8 @@ nltk.download('wordnet', download_dir=nltk_data_path)
 nltk.download('vader_lexicon', download_dir=nltk_data_path)
 nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_path)
 nltk.download('movie_reviews', download_dir=nltk_data_path)
+nltk.download('conll2000', download_dir=nltk_data_path)
+nltk.download('brown', download_dir=nltk_data_path)
 my_stop_words = set(stopwords.words("english"))
 warnings.filterwarnings('ignore', message='X does not have valid feature names')
 
