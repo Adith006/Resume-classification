@@ -19,7 +19,6 @@ import tempfile
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
 
-# ==================== TEXT PROCESSING FUNCTIONS ====================
 def process_resume(resume_text):
     """Clean resume text without NLTK"""
     resume_text = re.sub('[%s]' % re.escape("""!"#$%&'()*+,-/:;<=>?@[\]^_`{|}~ """), ' ', resume_text)
@@ -81,7 +80,22 @@ def extract_name_from_resume(text):
 
 def extract_skills(text):
     """Skill extraction with spaCy"""
-    skills = ['workday', 'hcm', 'peoplesoft', 'sql', 'reactjs', 'python']  # Your skill list
+     skills = ['workday', 'hcm', 'eib', 'picof','workday hcm',
+              'workday studio','nnbound/outbound integrations',
+              'peoplesoft', 'pia','ccb','birt','peci','ccw','pum','people tools',
+              'peoplesoft implementation','peoplesoft components',
+              'peoplesoft dba','peoplesoft admin','peoplesoft admin/dba','peopleSoft fscm', 
+              'peopletoolsupgrade','peopletools upgrade','process scheduler servers',
+              'peoplesoft hrms','peopleSoft consultant','peopledoft cloud',
+              'PeopleSoft migrations','peoplesoft Testing Framework','pure internet architecture',
+              'sql','sql server', 'ms sql server','msbi', 'sql developer', 'ssis','ssrs',
+              'ssms','t-sql','tsql','Razorsql', 'razor sql','triggers','powerbi','power bi',
+              'oracle sql', 'pl/sql', 'pl\sql','oracle', 'oracle 11g','oledb','cte','ddl',
+              'dml','etl','mariadb','maria db','reactjs', 'react js', 'react js developer', 'html', 
+              'css3','xml','javascript','html5','boostrap','jquery', 'redux','php', 'node js',
+              'nodejs','apache','netbeans','nestjs','nest js','react developer','react hooks',
+              'jenkins','rdbms','core connectors','PICOF','workday web services']
+
     doc = nlp(text.lower())
     found_skills = set()
     
@@ -97,9 +111,77 @@ def extract_skills(text):
     
     return ", ".join(found_skills)
 
+@st.cache(allow_output_mutation=True)
+def extract_resume_summary(resume_text, max_length=100):
+    my_model = TFT5ForConditionalGeneration.from_pretrained('t5-small')
+    tokenizer = T5Tokenizer.from_pretrained('t5-small')
+    
+    text = "summarize: " + resume_text
+    input_ids = tokenizer.encode(text, return_tensors='pt', max_length=512, truncation=True)
+    
+    summary_ids = my_model.generate(input_ids, max_length=max_length, num_beams=4, no_repeat_ngram_size=2)
+    t5_summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    return t5_summary
+@st.cache(allow_output_mutation=True)
+def load_model():
+    model = KeyBERT("distilbert-base-nli-mean-tokens")
+    return model
+model = load_model()
+def extract_keywords(resume):
+    keywords_scores = model.extract_keywords(
+    resume,
+    top_n=10,
+    keyphrase_ngram_range=(1, 3),
+    use_maxsum = True,
+    stop_words="english",)
+    keywords = [keyword for keyword, _ in keywords_scores]
+    return ",".join (keywords)
+
+def expDetails(text):
+    text = text.lower()
+    text = text.split()
+
+    for i in range(len(text) - 2):
+       if text[i] == 'year' or text[i] == 'years' or text[i] == 'year(s)':
+            exp_text = ' '.join(text[i - 2: i + 3])
+            matches = re.findall(r'\d+\.?\d*', exp_text)
+            if len(matches) > 0:
+                experience = float(matches[0])
+                if 'month' in exp_text:
+                    return experience
+                else:
+                    return str(round(experience*12 )) + " Months " 
+
+    return None
+#extracting education details from the resume
+nlp = spacy.load('en_core_web_sm')
+
+def parse_resume(resume_text):
+    doc = nlp(resume_text)
+
+    # Initialize variables to store education information
+    education = []
+
+    # Define education keywords
+    education_keywords = ['education', 'qualification', 'academic background','university','school','college','degree','engineering','educational qualification']
+
+    # Iterate over each sentence in the resume
+    for sent in doc.sents:
+        lower_sent = sent.text.lower()
+
+        # Check if the sentence contains any education keywords
+        if any(keyword in lower_sent for keyword in education_keywords):
+            # Extract the entities in the sentence
+            for ent in sent.ents:
+                # Check if the entity label is related to education
+                if ent.label_ in ['ORG', 'NORP']:
+                    education.append(ent.text)
+
+    return ",".join(education)
+
 # ==================== STREAMLIT APP ====================
 def main():
-    st.title("Resume Parser App (NLTK-Free)")
+    st.title("Resume Parser App (This app extracts information from your resume and gives you an idea about how well your resume matches to the description of job portals, the idea is to classify resume according to the job description")")
     page = st.sidebar.radio("Navigate", ["Classification", "Screening"])
     
     # Load models
@@ -164,10 +246,15 @@ def main():
                     if text:
                         cleaned = process_resume(text)
                         cleaned = remove_emoji(cleaned)
+                      
                         
                         # Extract info
                         name = extract_name_from_resume(text) or file.name
                         skills = extract_skills(cleaned)
+                        education = parse_resume(cleaned)
+                        experience = expDetails(cleaned)
+                        keyword = extract_keywords(cleaned)
+                        summary = extract_resume_summary(cleaned)
                         
                         # Calculate match score
                         cv = CountVectorizer(stop_words='english')
@@ -178,6 +265,10 @@ def main():
                             "Name": name,
                             "Skills": skills,
                             "Match Score": f"{score}%"
+                            "Education":education,
+                            "Experience":experience,
+                            "Keywords":keyword,
+                            "Summary":summary
                         })
                 except Exception as e:
                     st.warning(f"Error processing {file.name}: {e}")
