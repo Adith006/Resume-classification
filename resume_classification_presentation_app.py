@@ -179,7 +179,7 @@ def parse_resume(resume_text):
     return ",".join(education)
 
 def main():
-    st.title("Resume Parser App (This app extracts information from your resume and gives you an idea about how well your resume matches to the description of job portals, the idea is to classify resume according to the job description")")
+    st.title("Resume Parser App" ("This app extracts information from your resume and gives you an idea about how well your resume matches to the description of job portals, the idea is to classify resume according to the job description"))
     page = st.sidebar.radio("Navigate", ["Classification", "Screening"])
     
     # Load models
