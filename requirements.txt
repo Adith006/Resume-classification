@@ -85,7 +85,6 @@ doc2text==0.2.4
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
 regex==2023.6.3
 python-docx==0.8.11
-doc==0.1.0
 docx2txt==0.8
 
 
