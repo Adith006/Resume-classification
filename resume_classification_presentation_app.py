@@ -18,6 +18,10 @@ import tempfile
 from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 from keybert import KeyBERT
 
+pd.set_option('display.max_columns', None)  # To display all columns
+pd.set_option('display.expand_frame_repr', True)  # To expand the DataFrame width
+pd.set_option('display.max_colwidth', None)
+
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
 
