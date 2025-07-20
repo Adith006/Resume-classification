@@ -335,8 +335,8 @@ def main():
                 st.download_button(
                     label="Download Results",
                     data=csv,
-                    file_name="screening_results.csv",
-                    mime="text/csv"
+                    file_name="screening_results.pdf",
+                    mime="text/pdf"
                 )
 
 if __name__ == "__main__":
