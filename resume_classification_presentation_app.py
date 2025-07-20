@@ -262,7 +262,7 @@ def main():
                         results.append({
                             "Name": name,
                             "Skills": skills,
-                            "Match Score": f"{score}%"
+                            "Match Score": f"{score}%",
                             "Education":education,
                             "Experience":experience,
                             "Keywords":keyword,
