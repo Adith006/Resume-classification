@@ -33,7 +33,8 @@ import tempfile
 
 
 
-nltk.data.path.append("C:/Users/Adith/AppData/Roaming/nltk_data")
+nltk_data_dir = os.path.join(os.getcwd(), 'nltk_data')
+nltk.data.path.append(nltk_data_dir)
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('vader_lexicon')
