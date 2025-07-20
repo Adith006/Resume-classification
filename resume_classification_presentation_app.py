@@ -224,7 +224,7 @@ def extract_skills(resume_text):
     return ",".join([i.capitalize() for i in set([i.lower() for i in skillset])])
 
 #defining the function for resume summarization
-@st.cache_data(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True)
 def extract_resume_summary(resume_text, max_length=100):
     my_model = TFT5ForConditionalGeneration.from_pretrained('t5-small')
     tokenizer = T5Tokenizer.from_pretrained('t5-small')
@@ -236,7 +236,7 @@ def extract_resume_summary(resume_text, max_length=100):
     t5_summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     
     return t5_summary
-@st.cache_data(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True)
 def load_model():
     model = KeyBERT("distilbert-base-nli-mean-tokens")
     return model
