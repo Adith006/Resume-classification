@@ -47,7 +47,7 @@ semver==2.13.0
 setuptools==78.1.1
 six==1.16.0
 smmap==5.0.0
-streamlit==1.12.2
+streamlit==1.37.0
 tenacity==8.0.1
 threadpoolctl==3.1.0
 toml==0.10.2
